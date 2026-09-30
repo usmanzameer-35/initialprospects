@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Jersey Prospect Pipeline</title>
+
+  <style>
+    :root {
+      --bg: #f3efe8;
+      --paper: #fffdf9;
+      --ink: #1b1b19;
+      --muted: #746f67;
+      --line: #ddd5ca;
+      --accent: #8e3026;
+      --green: #3d7258;
+      --gold: #a36b19;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    header {
+      padding: 78px 0 55px;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(142,48,38,.18), transparent 30%),
+        var(--bg);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: Georgia, serif;
+      font-weight: 500;
+      letter-spacing: -.045em;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 15px 0 20px;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: .95;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 3rem;
+    }
+
+    h3 {
+      margin: 15px 0 5px;
+      font-size: 2rem;
+      line-height: 1.05;
+    }
+
+    .intro {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 38px;
+    }
+
+    .stat {
+      padding: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 2rem;
+      font-weight: 500;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 15px 0;
+      background: rgba(243,239,232,.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .toolbar-inner {
+      display: flex;
+      gap: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    .search { flex: 1; }
+    .filter { width: 230px; }
+
+    main {
+      padding: 58px 0 90px;
+    }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .heading p {
+      max-width: 460px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 410px;
+      padding: 26px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      transition: .25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .rank {
+      color: var(--accent);
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+    }
+
+    .priority {
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: white;
+      background: var(--green);
+      font-size: .7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .priority.medium {
+      background: var(--gold);
+    }
+
+    .industry {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .details {
+      margin: 23px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .details li {
+      padding: 9px 0;
+      border-top: 1px solid var(--line);
+      font-size: .92rem;
+    }
+
+    .details b {
+      display: inline-block;
+      width: 85px;
+      color: var(--muted);
+      font-size: .72rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .pitch {
+      margin-top: auto;
+      padding: 16px;
+      color: white;
+      background: var(--ink);
+      border-radius: 15px;
+      font-size: .9rem;
+    }
+
+    .pitch strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #efb09a;
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .empty {
+      display: none;
+      padding: 45px;
+      color: var(--muted);
+      text-align: center;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    footer {
+      padding: 35px 0 55px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: .85rem;
+    }
+
+    @media (max-width: 800px) {
+      .stats,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar-inner,
+      .heading {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter {
+        width: 100%;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Operations Hive + AccoHive</div>
+
+      <h1>New Jersey Prospect Pipeline</h1>
+
+      <p class="intro">
+        A public-source prospect list of newly opened, expanded and active
+        New Jersey businesses matched to practical operations and accounting
+        services.
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>10</strong>
+          <span>Initial prospects</span>
+        </div>
+
+        <div class="stat">
+          <strong>7</strong>
+          <span>Industries</span>
+        </div>
+
+        <div class="stat">
+          <strong>4</strong>
+          <span>High-priority targets</span>
+        </div>
+
+        <div class="stat">
+          <strong>NJ</strong>
+          <span>Primary market</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="wrap toolbar-inner">
+      <div class="search">
+        <input id="search" type="search"
+          placeholder="Search business, city, industry or service">
+      </div>
+
+      <div class="filter">
+        <select id="priority">
+          <option value="all">All priorities</option>
+          <option value="high">High priority</option>
+          <option value="medium">Medium priority</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="wrap">
+      <div class="heading">
+        <div>
+          <div class="eyebrow">Publicly available information</div>
+          <h2>Initial targets</h2>
+        </div>
+
+        <p>
+          Contact information should be rechecked before outreach.
+          Missing information has not been guessed.
+        </p>
+      </div>
+
+      <section class="grid" id="prospects">
+
+        <article class="card" data-priority="high"
+          data-search="tiny roots play cafe wayne childcare cafe booking operations back office">
+          <div class="card-top">
+            <div class="rank">01 / HIGH PRIORITY</div>
+            <div class="priority">High</div>
+          </div>
+
+          <h3>Tiny Roots Play Café</h3>
+          <div class="industry">Family play café</div>
+
+          <ul class="details">
+            <li><b>Address</b>229 Berdan Avenue, Wayne, NJ 07470</li>
+            <li><b>Email</b><a href="mailto:info@tinyrootsplaycafenj.com">info@tinyrootsplaycafenj.com</a></li>
+            <li><b>Phone</b><a href="tel:+15512460407">551-246-0407</a></li>
+            <li><b>Owners</b>Natalia Zielinski and Karolina Kownacki</li>
+            <li><b>Website</b><a href="https://www.tinyrootsplaycafenj.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Booking, birthday-party administration, customer follow-up and back-office support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="high"
+          data-search="dumpling dojo hackensack restaurant delivery customer operations bookkeeping salvatore grasso">
+          <div class="card-top">
+            <div class="rank">02 / HIGH PRIORITY</div>
+            <div class="priority">High</div>
+          </div>
+
+          <h3>Dumpling Dojo</h3>
+          <div class="industry">Restaurant and delivery</div>
+
+          <ul class="details">
+            <li><b>Address</b>260 S. Summit Avenue, Hackensack, NJ 07601</li>
+            <li><b>Phone</b><a href="tel:+12015467026">201-546-7026</a></li>
+            <li><b>Contact</b><a href="https://www.linkedin.com/in/1sal2grasso3" target="_blank">Salvatore Grasso</a></li>
+            <li><b>LinkedIn</b><a href="https://www.linkedin.com/in/1sal2grasso3" target="_blank">Open profile</a></li>
+            <li><b>Website</b><a href="https://dumplingdojo.com/hackensack/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Customer operations, order administration, delivery reporting and bookkeeping support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="high"
+          data-search="monmouth integrative counseling brielle mental health therapy trish magnotta admin operations">
+          <div class="card-top">
+            <div class="rank">03 / HIGH PRIORITY</div>
+            <div class="priority">High</div>
+          </div>
+
+          <h3>Monmouth Integrative Counseling Services</h3>
+          <div class="industry">Mental healthcare</div>
+
+          <ul class="details">
+            <li><b>Address</b>105 Union Ave, Suite 3, Brielle, NJ 08730</li>
+            <li><b>Phone</b><a href="tel:+17322315170">732-231-5170</a></li>
+            <li><b>Founder</b><a href="https://www.linkedin.com/in/trish-magnotta-2a4448279" target="_blank">Trish Magnotta</a></li>
+            <li><b>LinkedIn</b><a href="https://www.linkedin.com/company/monmouth-integrative-counseling-services" target="_blank">Company profile</a></li>
+            <li><b>Website</b><a href="https://micsmentalhealth.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Non-clinical appointment administration, customer operations, reporting and multi-location support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="medium"
+          data-search="three elizabeth tea parlor hackettstown tea hospitality reservations bookkeeping">
+          <div class="card-top">
+            <div class="rank">04 / MEDIUM PRIORITY</div>
+            <div class="priority medium">Medium</div>
+          </div>
+
+          <h3>Three Elizabeth’s Tea Parlor</h3>
+          <div class="industry">Tea room and hospitality</div>
+
+          <ul class="details">
+            <li><b>Address</b>107 W. Moore Street, Hackettstown, NJ 07840</li>
+            <li><b>Phone</b>Not publicly verified</li>
+            <li><b>Email</b>Not publicly verified</li>
+            <li><b>Signal</b>Grand opening on September 26, 2026</li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Reservations, customer enquiries, event administration and bookkeeping support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="medium"
+          data-search="ridge hair studio basking ridge salon booking customer operations leah romer">
+          <div class="card-top">
+            <div class="rank">05 / MEDIUM PRIORITY</div>
+            <div class="priority medium">Medium</div>
+          </div>
+
+          <h3>Ridge Hair Studio</h3>
+          <div class="industry">Beauty and salon</div>
+
+          <ul class="details">
+            <li><b>Address</b>108 S. Finley Ave, Basking Ridge, NJ 07920</li>
+            <li><b>Phone</b><a href="tel:+19083317122">908-331-7122</a></li>
+            <li><b>Email</b><a href="mailto:ridgehairstudio@gmail.com">ridgehairstudio@gmail.com</a></li>
+            <li><b>Owner</b>Leah Romer</li>
+            <li><b>Website</b><a href="https://www.ridgehairstudio.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Appointment administration, customer reminders, review follow-up and accounting support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="high"
+          data-search="jersey girl chocolate basking ridge retail ecommerce wholesale nicole edelson accounting">
+          <div class="card-top">
+            <div class="rank">06 / HIGH PRIORITY</div>
+            <div class="priority">High</div>
+          </div>
+
+          <h3>Jersey Girl Chocolate</h3>
+          <div class="industry">Retail, e-commerce and wholesale</div>
+
+          <ul class="details">
+            <li><b>Address</b>20 Lewis Street, Basking Ridge, NJ 07920</li>
+            <li><b>Phone</b><a href="tel:+18772900911">877-290-0911</a></li>
+            <li><b>Owner</b>Nicole Edelson</li>
+            <li><b>LinkedIn</b><a href="https://www.linkedin.com/company/jersey-girl-chocolate" target="_blank">Company profile</a></li>
+            <li><b>Website</b><a href="https://jerseygirlchocolate.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Accounting operations, inventory administration, wholesale order processing and event support.
+          </div>
+        </article>
+
+        <article class="card" data-priority="medium"
+          data-search="sweets abigail grace mullica hill bakery cookies abigail grace bookkeeping orders">
+          <div class="card-top">
+            <div class="rank">07 / MEDIUM PRIORITY</div>
+            <div class="priority medium">Medium</div>
+          </div>
+
+          <h3>Sweets by Abigail Grace</h3>
+          <div class="industry">Bakery and custom desserts</div>
+
+          <ul class="details">
+            <li><b>Address</b>69 N. Main Street, Mullica Hill, NJ</li>
+            <li><b>Phone</b><a href="tel:+18564343293">856-434-3293</a></li>
+            <li><b>Owner</b>Abigail Grace</li>
+            <li><b>Website</b><a href="https://www.sweetsbyabigailgrace.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Order administration, invoicing, customer communications and lightweight bookkeeping.
+          </div>
+        </article>
+
+        <article class="card" data-priority="high"
+          data-search="poppy vet teaneck veterinary animal wellness evannie martinez admin operations">
+          <div class="card-top">
+            <div class="rank">08 / HIGH PRIORITY</div>
+            <div class="priority">High</div>
+          </div>
+
+          <h3>Poppy Vet Animal Wellness Center</h3>
+          <div class="industry">Veterinary healthcare</div>
+
+          <ul class="details">
+            <li><b>Address</b>464 Cedar Lane, Teaneck, NJ 07666</li>
+            <li><b>Phone</b><a href="tel:+12013003931">201-300-3931</a></li>
+            <li><b>Veterinarian</b><a href="https://www.linkedin.com/in/evannie-martinez-fernandez-dvm-53a905140" target="_blank">Evannie Martinez, DVM</a></li>
+            <li><b>LinkedIn</b><a href="https://www.linkedin.com/in/evannie-martinez-fernandez-dvm-53a905140" target="_blank">Open profile</a></li>
+            <li><b>Website</b><a href="https://poppyvetcenter.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Appointment administration, customer service and operational reporting. Avoid protected data without compliance controls.
+          </div>
+        </article>
+
+        <article class="card" data-priority="medium"
+          data-search="pure parima mount laurel retail ecommerce textile inventory customer operations">
+          <div class="card-top">
+            <div class="rank">09 / MEDIUM PRIORITY</div>
+            <div class="priority medium">Medium</div>
+          </div>
+
+          <h3>Pure Parima</h3>
+          <div class="industry">Luxury retail and e-commerce</div>
+
+          <ul class="details">
+            <li><b>Address</b>107 Gaither Drive, Suite A, Mount Laurel, NJ 08054</li>
+            <li><b>Phone</b><a href="tel:+16099177755">609-917-7755</a></li>
+            <li><b>Email</b><a href="mailto:info@pureparima.com">info@pureparima.com</a></li>
+            <li><b>LinkedIn</b><a href="https://www.linkedin.com/company/pure-parima" target="_blank">Company profile</a></li>
+            <li><b>Website</b><a href="https://www.pureparima.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            E-commerce customer operations, order administration, inventory reporting and support workflows.
+          </div>
+        </article>
+
+        <article class="card" data-priority="medium"
+          data-search="paymore west long branch electronics retail franchise keith stickel inventory operations">
+          <div class="card-top">
+            <div class="rank">10 / MEDIUM PRIORITY</div>
+            <div class="priority medium">Medium</div>
+          </div>
+
+          <h3>PayMore West Long Branch</h3>
+          <div class="industry">Electronics resale and franchise retail</div>
+
+          <ul class="details">
+            <li><b>Address</b>145 Monmouth Road, Unit 5B, West Long Branch, NJ 07764</li>
+            <li><b>Phone</b><a href="tel:+17329629060">732-962-9060</a></li>
+            <li><b>Text</b><a href="sms:+18482766230">848-276-6230</a></li>
+            <li><b>Owner</b>Keith Stickel</li>
+            <li><b>Website</b><a href="https://westlongbranchnj.paymore.com/" target="_blank">Open website</a></li>
+          </ul>
+
+          <div class="pitch">
+            <strong>Recommended pitch</strong>
+            Inventory administration, customer operations, local reporting and franchise back-office support.
+          </div>
+        </article>
+
+      </section>
+
+      <div class="empty" id="empty">
+        No prospects match your search.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Operations Hive + AccoHive · New Jersey prospect research
+    </div>
+  </footer>
+
+  <script>
+    const search = document.getElementById("search");
+    const priority = document.getElementById("priority");
+    const cards = [...document.querySelectorAll(".card")];
+    const empty = document.getElementById("empty");
+
+    function filterCards() {
+      const query = search.value.toLowerCase().trim();
+      const selected = priority.value;
+      let count = 0;
+
+      cards.forEach(card => {
+        const textMatch = card.dataset.search.includes(query);
+        const priorityMatch =
+          selected === "all" || card.dataset.priority === selected;
+
+        const visible = textMatch && priorityMatch;
+
+        card.style.display = visible ? "flex" : "none";
+
+        if (visible) count++;
+      });
+
+      empty.style.display = count ? "none" : "block";
+    }
+
+    search.addEventListener("input", filterCards);
+    priority.addEventListener("change", filterCards);
+  </script>
+
+</body>
+</html>
+
